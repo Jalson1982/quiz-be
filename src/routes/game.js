@@ -8,6 +8,12 @@ const router = express.Router();
 
 router.post("/start", auth, async (req, res) => {
   try {
+    // Mark all active games for the user as inactive
+    await Game.updateMany(
+      { userId: req.user.id, isActive: true },
+      { isActive: false }
+    );
+
     const game = new Game({ userId: req.user.id });
     await game.save();
 

@@ -55,12 +55,7 @@ router.post("/", async (req, res) => {
       title,
       options,
       timeLimit,
-      category,
-      createdBy: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-      },
+      category
     });
 
     await question.save();

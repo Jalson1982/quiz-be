@@ -19,6 +19,20 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  createdBy: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+  },
 });
 
 export default mongoose.model("Question", questionSchema);

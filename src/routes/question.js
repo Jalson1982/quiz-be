@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import Question from "../models/Question.js";
+import Question from "../models/Question.js"; 
 
 const router = express.Router();
 

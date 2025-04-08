@@ -11,5 +11,16 @@
          "src": "/(.*)",
          "dest": "src/api/index.js"
      }
-    ]
+    ],
+    "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'"
+        }
+      ]
+    }
+  ]
  }

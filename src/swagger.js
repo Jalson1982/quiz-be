@@ -24,5 +24,13 @@ const options = {
 const swaggerSpec = swaggerJsDoc(options);
 
 export default (app) => {
+  app.use((req, res, next) => {
+    res.setHeader(
+      "Content-Security-Policy",
+      "style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; " +
+        "script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com"
+    );
+    next();
+  });
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };

@@ -1,3 +1,54 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Questions
+ *   description: Question management endpoints
+ */
+
+/**
+ * @swagger
+ * /questions:
+ *   post:
+ *     summary: Add a new question
+ *     tags: [Questions]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - options
+ *               - timeLimit
+ *               - category
+ *             properties:
+ *               title:
+ *                 type: string
+ *               options:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     text:
+ *                       type: string
+ *                     isCorrect:
+ *                       type: boolean
+ *               timeLimit:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Question added successfully
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
+ */
+
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";

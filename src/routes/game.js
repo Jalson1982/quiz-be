@@ -1,3 +1,61 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Game
+ *   description: Game management endpoints
+ */
+
+/**
+ * @swagger
+ * /game/start:
+ *   post:
+ *     summary: Start a new game
+ *     tags: [Game]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Game started successfully
+ *       400:
+ *         description: No questions available
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /game/answer:
+ *   post:
+ *     summary: Submit an answer
+ *     tags: [Game]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - gameId
+ *               - questionId
+ *               - answer
+ *             properties:
+ *               gameId:
+ *                 type: string
+ *               questionId:
+ *                 type: string
+ *               answer:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Answer submitted successfully
+ *       400:
+ *         description: Invalid game or question
+ *       500:
+ *         description: Server error
+ */
+
 import express from "express";
 import auth from "../middleware/auth.js";
 import Game from "../models/Game.js";

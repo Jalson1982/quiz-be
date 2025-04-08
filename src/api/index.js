@@ -5,6 +5,7 @@ import rateLimit from "express-rate-limit";
 import compression from "compression";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
+import swaggerSetup from "../swagger.js";
 
 import config from "../config/index.js";
 import { connectDB } from "../db/connection.js";
@@ -44,6 +45,9 @@ app.use(helmet.hidePoweredBy());
 // Performance middleware
 app.use(compression());
 app.use(express.json({ limit: "10kb" }));
+
+// Swagger setup
+swaggerSetup(app);
 
 // Health check
 app.get("/health", (req, res) => {

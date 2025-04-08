@@ -1,10 +1,31 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 import Question from "../models/Question.js";
 
 const router = express.Router();
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 router.post("/", async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const { title, options, timeLimit, category } = req.body;
 
     // Validate request body
@@ -35,11 +56,17 @@ router.post("/", async (req, res) => {
       options,
       timeLimit,
       category,
+      createdBy: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
     });
 
     await question.save();
     res.status(201).json(question);
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ message: "Server error" });
   }
 });

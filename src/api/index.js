@@ -6,15 +6,15 @@ import compression from "compression";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 
-import config from "./config/index.js";
-import { connectDB } from "./db/connection.js";
-import { errorHandler } from "./middleware/errorHandler.js";
-import logger from "./utils/logger.js";
+import config from "../config/index.js";
+import { connectDB } from "../db/connection.js";
+import { errorHandler } from "../middleware/errorHandler.js";
+import logger from "../utils/logger.js";
 
-import authRoutes from "./routes/auth.js";
-import gameRoutes from "./routes/game.js";
-import leaderboardRoutes from "./routes/leaderboard.js";
-import questionRoutes from "./routes/question.js";
+import authRoutes from "../routes/auth.js";
+import gameRoutes from "../routes/game.js";
+import leaderboardRoutes from "../routes/leaderboard.js";
+import questionRoutes from "../routes/question.js";
 
 const app = express();
 
@@ -70,6 +70,7 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
+// Connect to the database and start the server
 const startServer = async () => {
   try {
     await connectDB();
@@ -83,6 +84,7 @@ const startServer = async () => {
   }
 };
 
+// Start the server
 startServer();
 
 // Handle uncaught exceptions
@@ -95,3 +97,6 @@ process.on("unhandledRejection", (err) => {
   logger.error("Unhandled Rejection:", err);
   process.exit(1);
 });
+
+// Export the app for testing or further integration
+export default app;

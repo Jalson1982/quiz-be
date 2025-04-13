@@ -22,14 +22,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
+    "path": "^0.12.7",
     "winston": "^3.11.0",
-    "express-validator": "^7.0.1",
-    "hpp": "^0.2.3",
-    "express-mongo-sanitize": "^2.2.0"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "eslint": "^8.55.0",

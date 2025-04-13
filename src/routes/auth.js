@@ -95,6 +95,13 @@ router.post("/register", async (req, res) => {
   try {
     const { email, password, username } = req.body;
 
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    const isValidEmail = emailRegex.test(email);
+
+    if (!isValidEmail)
+      return res.status(400).json({ message: "Invalid email" });
+
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
     });
@@ -104,6 +111,28 @@ router.post("/register", async (req, res) => {
         .status(400)
         .json({ message: "Email or username already exists" });
     }
+
+    const upperCase = /(.*[A-Z])/;
+    const lowerCase = /(.*[a-z])/;
+    const digit = /(.*[0-9])/;
+    const specialChar = /([^A-Za-z0-9])/;
+
+    if (password.length < 8)
+      return res
+        .status(400)
+        .json({ message: "Password must be minimum 8 characters" });
+
+    if (!upperCase.test(password) || !lowerCase.test(password))
+      return res.status(400).json({
+        message: "Password must include one upper and lower case letter",
+      });
+
+    if (!digit.test(password) || !specialChar.test(password))
+      return res
+        .status(400)
+        .json({
+          message: "Password must include one digit and one special character",
+        });
 
     const user = new User({ email, password, username });
     await user.save();

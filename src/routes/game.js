@@ -100,6 +100,7 @@ router.post("/start", auth, async (req, res) => {
 });
 
 router.post("/answer", auth, async (req, res) => {
+  console.log(req.body);
   try {
     const { gameId, questionId, answer } = req.body;
     const game = await Game.findById(gameId);
@@ -118,7 +119,9 @@ router.post("/answer", auth, async (req, res) => {
       return res.status(400).json({ message: "Invalid answer index" });
     }
 
-    const isCorrect = question.options[answer].isCorrect;
+    const isCorrect = question.options.find(
+      (option) => option.text === answer
+    ).isCorrect;
 
     if (!isCorrect) {
       game.isActive = false;

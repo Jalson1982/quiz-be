@@ -128,11 +128,9 @@ router.post("/register", async (req, res) => {
       });
 
     if (!digit.test(password) || !specialChar.test(password))
-      return res
-        .status(400)
-        .json({
-          message: "Password must include one digit and one special character",
-        });
+      return res.status(400).json({
+        message: "Password must include one digit and one special character",
+      });
 
     const user = new User({ email, password, username });
     await user.save();
@@ -145,15 +143,18 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  console.log(req.body);
   try {
     const { email, password } = req.body;
+    console.log(email, password);
     const user = await User.findOne({ email });
-
+    console.log(user);
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }

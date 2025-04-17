@@ -121,7 +121,7 @@ router.post("/answer", auth, async (req, res) => {
 
     const isCorrect = question.options.find(
       (option) => option.text === answer
-    ).isCorrect;
+    )?.isCorrect;
 
     if (!isCorrect) {
       game.isActive = false;

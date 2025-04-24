@@ -100,7 +100,6 @@ router.post("/start", auth, async (req, res) => {
 });
 
 router.post("/answer", auth, async (req, res) => {
-  console.log(req.body);
   try {
     const { gameId, questionId, answer } = req.body;
     const game = await Game.findById(gameId);
@@ -113,10 +112,6 @@ router.post("/answer", auth, async (req, res) => {
 
     if (!question) {
       return res.status(400).json({ message: "Question not found" });
-    }
-
-    if (answer < 0 || answer >= question.options.length) {
-      return res.status(400).json({ message: "Invalid answer index" });
     }
 
     const isCorrect = question.options.find(

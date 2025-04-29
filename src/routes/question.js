@@ -6,8 +6,6 @@ import { dirname } from "path";
 import User from "../models/User.js";
 import Question from "../models/Question.js";
 
-const __filename = fileURLToPath(import.meta.url);
-
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -81,6 +79,26 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.role !== "admin")
+      return res.status(401).json({ message: "You are not an admin!" });
+
     const questions = await Question.find();
     if (questions.length === 0) return;
 

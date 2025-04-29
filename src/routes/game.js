@@ -131,4 +131,17 @@ router.post("/answer", auth, async (req, res) => {
   }
 });
 
+router.get("/length", async (req, res) => {
+  try {
+    const gamesLength = (await Game.find()).length;
+
+    if (gamesLength === 0)
+      return res.status(404).json({ message: "No games found" });
+
+    return res.status(200).json({ gamesLength });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;

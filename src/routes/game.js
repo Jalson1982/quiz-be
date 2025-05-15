@@ -144,4 +144,34 @@ router.get("/length", async (req, res) => {
   }
 });
 
+router.post("/end-game", auth, async (req, res) => {
+  try {
+    const { gameId } = req.body;
+    const game = await Game.findById(gameId);
+
+    if (!game || !game.isActive) {
+      return res.status(400).json({ message: "Invalid game" });
+    }
+
+    game.isActive = false;
+    await game.save();
+
+    const user = await User.findById(req.user.id);
+    if (game.score > user.bestScore) {
+      user.bestScore = game.score;
+      await user.save();
+    }
+
+    res.json({
+      gameOver: true,
+      reason: "manual_end",
+      score: game.score,
+      bestScore: user.bestScore,
+      message: "Game ended manually",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;

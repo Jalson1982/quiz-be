@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  coins: {
+    type: Number,
+    default: 0,
+  },
 });
 
 userSchema.pre("save", async function (next) {

@@ -122,4 +122,46 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/bulk", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+
+  const user = await User.findById(decoded.userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const { questions } = req.body;
+  if (!questions) {
+    return res.status(400).json({ message: "Questions are required" });
+  }
+
+  const formattedQuestions = questions.map((question) => ({
+    ...question,
+    createdBy: {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+  }));
+  const respon = await Question.insertMany(formattedQuestions);
+
+  res.status(201).json(respon);
+});
+
+router.get("/", async (req, res) => {
+  // return all questions
+  const questions = await Question.find();
+  console.log(questions.length);
+  res.status(200).json(questions);
+});
+
 export default router;

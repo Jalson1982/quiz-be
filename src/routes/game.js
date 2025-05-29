@@ -165,6 +165,8 @@ router.post("/answer", auth, async (req, res) => {
       const user = await User.findById(req.user.id);
       if (game.score > user.bestScore) {
         user.bestScore = game.score;
+        const coins = calculateCoins(game.score);
+        user.coins += coins;
         await user.save();
       }
 
@@ -180,6 +182,54 @@ router.post("/answer", auth, async (req, res) => {
     res.json({
       correct: true,
       score: game.score,
+      nextQuestion,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/revive", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (user.coins < 10) {
+      return res.status(400).json({ message: "Not enough coins" });
+    }
+
+    // Find the active game for the user
+    const game = await Game.findOne({ userId: req.user.id, isActive: true });
+    if (!game) {
+      return res.status(400).json({ message: "No active game found" });
+    }
+
+    // Deduct coins
+    user.coins -= 10;
+    await user.save();
+
+    // Get next random question
+    const nextQuestion = await Question.aggregate([
+      {
+        $match: {
+          _id: { $nin: game.answeredQuestions },
+        },
+      },
+      { $sample: { size: 1 } },
+      {
+        $project: {
+          title: 1,
+          timeLimit: 1,
+          category: 1,
+          "options.text": 1,
+        },
+      },
+    ]).then((questions) => questions[0]);
+
+    if (!nextQuestion) {
+      return res.status(400).json({ message: "No more questions available" });
+    }
+
+    res.json({
+      success: true,
       nextQuestion,
     });
   } catch (error) {

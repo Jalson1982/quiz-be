@@ -9,7 +9,7 @@
  * @swagger
  * /auth/register:
  *   post:
- *     summary: Register a new user
+
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -174,10 +174,17 @@ router.get("/profile", auth, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const rank =
+      (await User.countDocuments({
+        bestScore: { $gt: user.bestScore },
+      })) + 1;
+
     res.json({
       email: user.email,
       username: user.username,
       bestScore: user.bestScore,
+      coins: user.coins,
+      rank,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });

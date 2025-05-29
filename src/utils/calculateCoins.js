@@ -1,3 +1,3 @@
 export const calculateCoins = (score) => {
-  return Math.floor(score / 10);
+  return Math.floor(score / 5);
 };

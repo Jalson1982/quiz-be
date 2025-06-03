@@ -119,7 +119,6 @@ router.post("/answer", auth, async (req, res) => {
     )?.isCorrect;
 
     if (!isCorrect) {
-      game.isActive = false;
       await game.save();
 
       const user = await User.findById(req.user.id);
